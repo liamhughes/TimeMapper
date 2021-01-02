@@ -7,20 +7,28 @@
   <Namespace>System.Globalization</Namespace>
 </Query>
 
+#load ".\CalendarService"
 #load ".\UserInterfaceUtilities"
 
+const string CALENDAR_NAME = "Time Map";
 const string TEMPLATE_FILE_NAME = "template.json";
 const string TIME_SPAN_FORMAT_STRING = @"h\:mm";
 
+private CalendarService Service { get; set; }
+
 async Task Main()
 {
+	Service = new CalendarService();
+	
 	var entries = LoadEntries();
 	
 	for(var index = 0; index < entries.Count; index++)
 	{
 		var entry = entries[index];
 		
-		//await UpdateEvent(entry);
+		await UpdateEvent(entry);
+		
+		CreateEvent(entry);
 		
 		var nextEntry = index < entries.Count - 1 ? entries[index + 1] : null;
 		if (nextEntry != null && !nextEntry.StartTime.HasValue)
@@ -29,6 +37,9 @@ async Task Main()
 	
 	entries.Dump();
 }
+
+void CreateEvent(Entry entry)
+ 	=> Service.CreateEvent(entry, CALENDAR_NAME);
 
 string GetScriptDirectoryPath()
 	=> Path.GetDirectoryName(Util.CurrentQueryPath);
@@ -64,10 +75,3 @@ async Task UpdateEvent(Entry entry)
 	entry.Duration = await GetUserInputAsync("Duration", entry.Duration);
 }
 
-class Entry
-{
-	public string Title { get; set; }
-	public TimeSpan? Duration { get; set; }
-	public TimeSpan? StartTime { get; set; }
-	public TimeSpan? EndTime => StartTime + Duration;
-}
