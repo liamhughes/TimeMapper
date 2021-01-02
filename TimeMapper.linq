@@ -16,11 +16,18 @@ async Task Main()
 {
 	var entries = LoadEntries();
 	
-	foreach(var entry in entries)
+	for(var index = 0; index < entries.Count; index++)
 	{
-		await UpdateEvent(entry);
+		var entry = entries[index];
+		
+		//await UpdateEvent(entry);
+		
+		var nextEntry = index < entries.Count - 1 ? entries[index + 1] : null;
+		if (nextEntry != null && !nextEntry.StartTime.HasValue)
+			nextEntry.StartTime = entry.EndTime;
 	}
 	
+	entries.Dump();
 }
 
 string GetScriptDirectoryPath()
@@ -62,4 +69,5 @@ class Entry
 	public string Title { get; set; }
 	public TimeSpan? Duration { get; set; }
 	public TimeSpan? StartTime { get; set; }
+	public TimeSpan? EndTime => StartTime + Duration;
 }
