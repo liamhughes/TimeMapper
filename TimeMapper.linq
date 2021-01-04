@@ -28,7 +28,8 @@ async Task Main()
 		
 		await UpdateEvent(entry);
 		
-		CreateEvent(entry);
+		if (entry.Title != String.Empty)
+			CreateEvent(entry);
 		
 		var nextEntry = index < entries.Count - 1 ? entries[index + 1] : null;
 		if (nextEntry != null && !nextEntry.StartTime.HasValue)
