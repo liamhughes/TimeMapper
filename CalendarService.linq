@@ -82,8 +82,8 @@ public class CalendarService
 			}
 		}, 
 		calendars.Single(c => c.Summary == calendarName).Id).Execute();
-		
-		"Event created.".Dump();
+
+		$"Event '{entry.Title}' created, {entry.StartTime}-{entry.EndTime}.".Dump();
 	}
 
 	string GetScriptDirectoryPath()
