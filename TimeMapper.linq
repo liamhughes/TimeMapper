@@ -72,6 +72,10 @@ List<Entry> LoadEntries()
 async Task UpdateEvent(Entry entry)
 {
 	entry.Title = await GetUserInputAsync("Title", entry.Title);
+	
+	if (entry.Title == String.Empty)
+		return;
+	
 	entry.StartTime = await GetUserInputAsync("Start Time", entry.StartTime);
 	entry.Duration = await GetUserInputAsync("Duration", entry.Duration);
 }
